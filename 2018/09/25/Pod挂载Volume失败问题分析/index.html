@@ -124,7 +124,7 @@
 <meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014141914.png">
 <meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014165852.png">
 <meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014165935.png">
-<meta property="og:updated_time" content="2018-10-17T10:49:30.074Z">
+<meta property="og:updated_time" content="2018-10-17T11:02:57.244Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pod挂载Volume失败问题分析">
 <meta name="twitter:description" content="Kubernetes环境偶尔出现Statefulset中的Pod被删除新创建的Pod挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。  在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。 存储简析存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同应用中，不同控制器的协作，如">
@@ -349,7 +349,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 18:49:30" itemprop="dateModified" datetime="2018-10-17T18:49:30+08:00">2018-10-17</time>
+                <time title="Modified: 2018-10-17 19:02:57" itemprop="dateModified" datetime="2018-10-17T19:02:57+08:00">2018-10-17</time>
               
             
           </span>
@@ -477,7 +477,6 @@
 <p>场景三 Pod被删除，volume manager umount/deviceUmount，statefulset创建Pod，scheduler指定Pod到原节点，问题出现</p>
 <p>结合出现问题的日志，</p>
 <p>总结，Kubernetes之所以在当前成为容器编排领域的事实标准，原因很多，但是对我们来讲基于声明式API的编程范式是我们依赖Kubernetes的重要原因，当然在其解决的问题规模下复杂程度也不言而喻，总之，一句话，没有银弹。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Ensure volumes that should be unmounted are unmounted.</span></span><br><span class="line">   <span class="comment">// 确保需要umount的volume已经unmount</span></span><br><span class="line"><span class="keyword">for</span> _, mountedVolume := <span class="keyword">range</span> rc.actualStateOfWorld.GetMountedVolumes() &#123;</span><br><span class="line">	<span class="keyword">if</span> !rc.desiredStateOfWorld.PodExistsInVolume(mountedVolume.PodName, mountedVolume.VolumeName) &#123;</span><br><span class="line">		<span class="comment">// Volume is mounted, unmount it</span></span><br><span class="line">		<span class="comment">// 从actualStateOfWorld中获取所有已经mount到pod的卷，对比desiredStateOfWorld中是否存在对应的Pod需要mount卷,如果不存在则将卷umount掉</span></span><br><span class="line">           ...</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Ensure volumes that should be attached/mounted are attached/mounted.</span></span><br><span class="line"><span class="comment">// 确保需要attach/mount的卷，已经attach/mount</span></span><br><span class="line"><span class="keyword">for</span> _, volumeToMount := <span class="keyword">range</span> rc.desiredStateOfWorld.GetVolumesToMount() &#123;</span><br><span class="line">	<span class="comment">//从desiredStateOfWorld中获取所有需要mount的volume，对比actualStateOfWorld中Pod是否存在</span></span><br><span class="line">       <span class="comment">//如果volume还未attach，则验证volume是否attach成功</span></span><br><span class="line">       <span class="comment">//如果volume未mount，则执行mountVolume</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Ensure devices that should be detached/unmounted are detached/unmounted.</span></span><br><span class="line"><span class="comment">// 确保需要detached/unmounted的卷已经detached/unmounted</span></span><br><span class="line"><span class="keyword">for</span> _, attachedVolume := <span class="keyword">range</span> rc.actualStateOfWorld.GetUnmountedVolumes() &#123;</span><br><span class="line">	<span class="comment">//如果volume在desiredStateOfWorld中不存在，并且volume还GloballyMounted，UnmountDevice</span></span><br><span class="line">       <span class="comment">//如果volume在desiredStateOfWorld中不存在，并且volume没有GloballyMounted，MarkVolumeAsDetached</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -511,8 +510,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/25/浅谈kubernetes编程范式/" rel="next" title="浅谈kubernetes编程范式">
-                <i class="fa fa-chevron-left"></i> 浅谈kubernetes编程范式
+              <a href="/2018/09/05/Clean-Architecture读书笔记（一）/" rel="next" title="Clean Architecture读书笔记（一）">
+                <i class="fa fa-chevron-left"></i> Clean Architecture读书笔记（一）
               </a>
             
           </div>
@@ -589,7 +588,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
