@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Kubernetes环境偶尔出现Statefulset中的Pod被删除新创建的Pod挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。  在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。 存储简析存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同应用中，不同控制器的协作，如">
+<meta name="keywords" content="kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pod挂载Volume失败问题分析">
+<meta property="og:url" content="http://yoursite.com/2018/09/25/Pod挂载Volume失败问题分析/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Kubernetes环境偶尔出现Statefulset中的Pod被删除新创建的Pod挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。  在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。 存储简析存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同应用中，不同控制器的协作，如">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-09-20-090324.png">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-10-08-035245.png">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014140720.png">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014142538.png">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014142016.png">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014141914.png">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014165852.png">
+<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014165935.png">
+<meta property="og:updated_time" content="2018-10-17T10:49:30.074Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pod挂载Volume失败问题分析">
+<meta name="twitter:description" content="Kubernetes环境偶尔出现Statefulset中的Pod被删除新创建的Pod挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。  在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。 存储简析存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同应用中，不同控制器的协作，如">
+<meta name="twitter:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-09-20-090324.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/25/Pod挂载Volume失败问题分析/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Pod挂载Volume失败问题分析 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/25/Pod挂载Volume失败问题分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pod挂载Volume失败问题分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-09-25 10:01:56" itemprop="dateCreated datePublished" datetime="2018-09-25T10:01:56+08:00">2018-09-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-17 18:49:30" itemprop="dateModified" datetime="2018-10-17T18:49:30+08:00">2018-10-17</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Kubernetes环境偶尔出现Statefulset中的Pod被删除新创建的Pod挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。</p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-09-20-090324.png" alt="image-20180919164047762"></p>
+<p>在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。</p>
+<h3 id="存储简析"><a href="#存储简析" class="headerlink" title="存储简析"></a>存储简析</h3><p>存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同应用中，不同控制器的协作，如下图。</p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-10-08-035245.png" alt=""></p>
+<p>从三个维度分析</p>
+<ul>
+<li><p>从卷的生命周期来讲，卷被Pod使用或者卷被回收，会依赖顺序严格的几个阶段</p>
+<ul>
+<li><p>卷被Pod使用</p>
+<ul>
+<li>provision，卷分配成功</li>
+<li>attach，卷挂载在对应worker node</li>
+<li>mount，卷挂载为文件系统并且映射给对应Pod</li>
+</ul>
+<p>卷要成功被Pod使用，需要遵循以上顺序</p>
+</li>
+<li><p>卷被回收</p>
+<ul>
+<li>umount，卷已经和对应worker node解除映射，且已经从文件系统umount</li>
+<li>detach，卷已经从worker node卸载</li>
+<li>recycle，卷被回收</li>
+</ul>
+<p>卷要成功回收，需要遵循以上顺序</p>
+</li>
+</ul>
+</li>
+<li><p>从Kubernetes存储系统来讲，卷生命周期管理的职责，又分散于不同的控制器中</p>
+<ul>
+<li>pv controller，负责创建和回收卷</li>
+<li>attach detach controller，负责挂载和卸载卷</li>
+<li>volume manager，负责mount和umount卷</li>
+</ul>
+</li>
+<li><p>controller模式，每个controller负责特定功能，并且不断进行reconcile（对比期望状态与实际状态），然后进行调整</p>
+<p>比如attach detach controller和volume manager中，各自都会有desiredStateOfWorld（保存期望状态）和actualStateOfWorld（保存实际状态）缓存，并且由各自的syncLoopFunc不断对比两个缓存的差异，并进行调整，下文中会介绍。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">	desired := getDesiredState();</span><br><span class="line">	current := getCurrentState();</span><br><span class="line">	makeChanges(desired, current);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>结合以上三个维度，<strong>Kubernetes需要保证卷的管理功能分布在不同控制器的前提下保证卷生命周期顺序的正确性</strong>。以Pod使用卷为例，看Kubernetes是如何做到这一点？</p>
+<h3 id="Pod启动流程"><a href="#Pod启动流程" class="headerlink" title="Pod启动流程"></a>Pod启动流程</h3><p>假设scheduler已经完成worker node选择，确定调度的节点，此时启动Pod前，需要先完成卷映射到Pod路径中，结合前面的分析，整个过程如下</p>
+<ol>
+<li><p>卷分配，pvc绑定pv，由pv controller负责完成</p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014140720.png" alt=""></p>
+<p>此时pvc绑定pv</p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014142538.png" alt=""></p>
+</li>
+<li><p>attach detach controlle，如果pod分配到worker node，并且对应卷已经创建，则将卷挂载到对应worker node，并且给worker node资源增加volume已经挂载对应卷的信息</p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014142016.png" alt=""></p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014141914.png" alt=""></p>
+<p>此时对应node资源状态中增加volume信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@10-10-88-152 ~]# kubectl get nodes 10-10-88-113 -o yaml </span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Node</span><br><span class="line">....</span><br><span class="line">  volumesAttached:</span><br><span class="line">  - devicePath: csi-add9fc778d9593d01818d65ccde7013e87327d9f675b47df42a34b860c581711</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4faa18f5bbbd11e8-1365</span><br><span class="line">  - devicePath: csi-5dd249387138238e8e2209eb471450a072dd6543adde7a6769c8461943c789ca</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa9b764bbbd11e8-1366</span><br><span class="line">  - devicePath: csi-bc9b81e32d84e8890d17568964c1e01af97b0c175e0b73d4bf30bba54e3f1a1e</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa94533bbbd11e8-1364</span><br><span class="line">  volumesInUse:</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa94533bbbd11e8-1364</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa9b764bbbd11e8-1366</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4faa18f5bbbd11e8-1365</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>volume manager在worker node中负责将卷挂载到对应路径</p>
+<ul>
+<li><p>pod分配到本worker node后，获取Pod需要的volume，通过对比node状态中的volumesAttached，确认volume是否已经attach到node节点，如果attach到node节点则将自身actualStateOfWorld中的volume状态设置成attached</p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014165852.png" alt=""></p>
+</li>
+<li><p>如果已经attached成功，则进入到文件系统挂载流程</p>
+<ul>
+<li><p>第一步，先挂载到node中全局路径，比如<code>/var/lib/kubelet/plugins/kubernetes.io/csi/pv/pvc-3ecd68c7b7d211e8/globalmount</code></p>
+</li>
+<li><p>第二步，映射到Pod对应路径，比如<code>/var/lib/kubelet/pods/49a5fede-b811-11e8-844f-fa7378845e00/volumes/kubernetes.io~csi/pvc-3ecd68c7b7d211e8/mount</code></p>
+</li>
+<li><p>第三步，actualStateOfWorld中设置volume为挂载成功状态</p>
+<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014165935.png" alt=""></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>pod controller确认卷已经映射成功，启动Pod，此处不详细展开</p>
+</li>
+</ol>
+<h3 id="Pod被删除的过程"><a href="#Pod被删除的过程" class="headerlink" title="Pod被删除的过程"></a>Pod被删除的过程</h3><ol>
+<li>pod controller watch到pod处于被删除状态，执行killPod操作，删除Pod，此处不详细展开</li>
+<li>volume manager获取被删除的Pod，会执行如下几步<ul>
+<li>第一步，通过DeletePodFromVolume将Pod从desiredStateOfWorld中删除，此处，如果volume关联的所有Pod都被删除，则此volume也从desiredStateOfWorld的缓存中清除</li>
+<li>第二步，将volume到pod的映射解除</li>
+<li>第三步，如果volume中没有pod将说明此worker node中volume不需要挂载，此时执行umountDevice，将global path umount</li>
+</ul>
+</li>
+<li>attach detach controller发现挂载到node节点的volume没有被使用，执行detach操作，将卷从node节点detach，此时卷完全处于集群中未被使用的状态。</li>
+</ol>
+<p>Controller基于watch机制通过etcd实现状态交互，整个过程似乎完美，那么结合我们遇到的问题，statefulset中Pod被删除会发生什么？</p>
+<p>场景一 Pod被删除，volume manager umount，statefulset立即创建Pod，scheduler立即指定Pod到原节点</p>
+<ol>
+<li>volume manager发现卷没有绑定pod，需要被umount，在deviceUmount，devicePath为空</li>
+<li>attach detach controller发现卷需要detach，detach volume</li>
+<li>volume manager发现卷没有绑定pod，先确认是否又</li>
+</ol>
+<p>场景二 Pod被删除，volume manager umount/deviceUmount，attach detach controller detach，statefulset创建Pod，scheduler指定Pod到原节点</p>
+<p>场景三 Pod被删除，volume manager umount/deviceUmount，statefulset创建Pod，scheduler指定Pod到原节点，问题出现</p>
+<p>结合出现问题的日志，</p>
+<p>总结，Kubernetes之所以在当前成为容器编排领域的事实标准，原因很多，但是对我们来讲基于声明式API的编程范式是我们依赖Kubernetes的重要原因，当然在其解决的问题规模下复杂程度也不言而喻，总之，一句话，没有银弹。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Ensure volumes that should be unmounted are unmounted.</span></span><br><span class="line">   <span class="comment">// 确保需要umount的volume已经unmount</span></span><br><span class="line"><span class="keyword">for</span> _, mountedVolume := <span class="keyword">range</span> rc.actualStateOfWorld.GetMountedVolumes() &#123;</span><br><span class="line">	<span class="keyword">if</span> !rc.desiredStateOfWorld.PodExistsInVolume(mountedVolume.PodName, mountedVolume.VolumeName) &#123;</span><br><span class="line">		<span class="comment">// Volume is mounted, unmount it</span></span><br><span class="line">		<span class="comment">// 从actualStateOfWorld中获取所有已经mount到pod的卷，对比desiredStateOfWorld中是否存在对应的Pod需要mount卷,如果不存在则将卷umount掉</span></span><br><span class="line">           ...</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Ensure volumes that should be attached/mounted are attached/mounted.</span></span><br><span class="line"><span class="comment">// 确保需要attach/mount的卷，已经attach/mount</span></span><br><span class="line"><span class="keyword">for</span> _, volumeToMount := <span class="keyword">range</span> rc.desiredStateOfWorld.GetVolumesToMount() &#123;</span><br><span class="line">	<span class="comment">//从desiredStateOfWorld中获取所有需要mount的volume，对比actualStateOfWorld中Pod是否存在</span></span><br><span class="line">       <span class="comment">//如果volume还未attach，则验证volume是否attach成功</span></span><br><span class="line">       <span class="comment">//如果volume未mount，则执行mountVolume</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Ensure devices that should be detached/unmounted are detached/unmounted.</span></span><br><span class="line"><span class="comment">// 确保需要detached/unmounted的卷已经detached/unmounted</span></span><br><span class="line"><span class="keyword">for</span> _, attachedVolume := <span class="keyword">range</span> rc.actualStateOfWorld.GetUnmountedVolumes() &#123;</span><br><span class="line">	<span class="comment">//如果volume在desiredStateOfWorld中不存在，并且volume还GloballyMounted，UnmountDevice</span></span><br><span class="line">       <span class="comment">//如果volume在desiredStateOfWorld中不存在，并且volume没有GloballyMounted，MarkVolumeAsDetached</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/25/浅谈kubernetes编程范式/" rel="next" title="浅谈kubernetes编程范式">
+                <i class="fa fa-chevron-left"></i> 浅谈kubernetes编程范式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#存储简析"><span class="nav-number">1.</span> <span class="nav-text">存储简析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod启动流程"><span class="nav-number">2.</span> <span class="nav-text">Pod启动流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod被删除的过程"><span class="nav-number">3.</span> <span class="nav-text">Pod被删除的过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.4.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
