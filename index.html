@@ -340,7 +340,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 19:08:41" itemprop="dateModified" datetime="2018-10-17T19:08:41+08:00">2018-10-17</time>
+                <time title="Modified: 2018-10-17 19:10:01" itemprop="dateModified" datetime="2018-10-17T19:10:01+08:00">2018-10-17</time>
               
             
           </span>
@@ -459,7 +459,7 @@
 </li>
 <li>attach detach controller发现挂载到node节点的volume没有被使用，执行detach操作，将卷从node节点detach，此时卷完全处于集群中未被使用的状态。</li>
 </ol>
-<p>Controller基于watch机制通过etcd实现状态交互，整个过程似乎完美，那么结合我们遇到的问题，statefulset中Pod被删除会发生什么？</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>Controller基于watch机制通过etcd实现状态交互，整个过程似乎完美，那么结合我们遇到的问题，statefulset中Pod被删除会发生什么？</p>
 <p>场景一 Pod被删除，volume manager umount，statefulset立即创建Pod，scheduler立即指定Pod到原节点</p>
 <ol>
 <li>volume manager发现卷没有绑定pod，需要被umount，在deviceUmount，devicePath为空</li>
