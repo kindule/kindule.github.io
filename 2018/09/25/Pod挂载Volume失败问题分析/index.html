@@ -124,7 +124,7 @@
 <meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014141914.png">
 <meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014165852.png">
 <meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014165935.png">
-<meta property="og:updated_time" content="2018-10-17T11:02:57.244Z">
+<meta property="og:updated_time" content="2018-10-17T11:08:41.065Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pod挂载Volume失败问题分析">
 <meta name="twitter:description" content="Kubernetes环境偶尔出现Statefulset中的Pod被删除新创建的Pod挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。  在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。 存储简析存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同应用中，不同控制器的协作，如">
@@ -349,7 +349,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 19:02:57" itemprop="dateModified" datetime="2018-10-17T19:02:57+08:00">2018-10-17</time>
+                <time title="Modified: 2018-10-17 19:08:41" itemprop="dateModified" datetime="2018-10-17T19:08:41+08:00">2018-10-17</time>
               
             
           </span>
@@ -475,8 +475,7 @@
 </ol>
 <p>场景二 Pod被删除，volume manager umount/deviceUmount，attach detach controller detach，statefulset创建Pod，scheduler指定Pod到原节点</p>
 <p>场景三 Pod被删除，volume manager umount/deviceUmount，statefulset创建Pod，scheduler指定Pod到原节点，问题出现</p>
-<p>结合出现问题的日志，</p>
-<p>总结，Kubernetes之所以在当前成为容器编排领域的事实标准，原因很多，但是对我们来讲基于声明式API的编程范式是我们依赖Kubernetes的重要原因，当然在其解决的问题规模下复杂程度也不言而喻，总之，一句话，没有银弹。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Kubernetes之所以在当前成为容器编排领域的事实标准，原因很多，但是对我们来讲基于声明式API的编程范式是我们依赖Kubernetes的重要原因，当然在其解决的问题规模下复杂程度也不言而喻，总之，一句话，没有银弹。</p>
 
       
     </div>
@@ -645,7 +644,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#存储简析"><span class="nav-number">1.</span> <span class="nav-text">存储简析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod启动流程"><span class="nav-number">2.</span> <span class="nav-text">Pod启动流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod被删除的过程"><span class="nav-number">3.</span> <span class="nav-text">Pod被删除的过程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#存储简析"><span class="nav-number">1.</span> <span class="nav-text">存储简析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod启动流程"><span class="nav-number">2.</span> <span class="nav-text">Pod启动流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod被删除的过程"><span class="nav-number">3.</span> <span class="nav-text">Pod被删除的过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
