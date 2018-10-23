@@ -277,6 +277,186 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kindule.github.io/2018/09/26/lost-volume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jin Ge">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kindule">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/26/lost-volume/" itemprop="url">
+                  lost-volume
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-09-26 11:00:41" itemprop="dateCreated datePublished" datetime="2018-09-26T11:00:41+08:00">2018-09-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-23 14:32:11" itemprop="dateModified" datetime="2018-10-23T14:32:11+08:00">2018-10-23</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储"><a href="#卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储" class="headerlink" title="卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储"></a>卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储</h3><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><ul>
+<li><p>环境</p>
+<ul>
+<li>nfs</li>
+<li>csi</li>
+</ul>
+</li>
+<li><p>过程思考</p>
+<ul>
+<li><p>attach成功</p>
+</li>
+<li><p>global mount成功</p>
+</li>
+<li><p>mount -v 应该不成功–检查mount是否成功</p>
+<ul>
+<li><p>NFS未mount成功，原因<strong>执行mount nfs如果remote target没有也不会报错</strong></p>
+</li>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@10-10-40-98 ~]# mount -t nfs -o nolock,async,rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,actimeo=0,vers=3,timeo=600 172.16.130.1:pvc-3eef6820c13e11e8/root /mnt</span><br><span class="line">mount.nfs: backgrounding "172.16.130.1:pvc-3eef6820c13e11e8/root"</span><br><span class="line">mount.nfs: mount options: "rw,nolock,bg,hard,nointr,rsize=32768,wsize=32768,tcp,actimeo=0,vers=3,timeo=600"</span><br><span class="line">[root@10-10-40-98 ~]# echo $?</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>最终发现nfs mount参数配置不正确，参数<code>bg</code>释义，简单来讲mount时立即返回，然后后天执行nfs挂载，退出码一直为0</p>
+<blockquote>
+<p>bg / fg</p>
+<p>Determines  how  the  mount(8)  command  behaves if an attempt to mount an export fails.  The fg option causes mount(8) to exit with an error status if any part of the mount request times out or fails outright.  This is called a “foreground” mount, and is the default behavior if neither the fg nor bg mount option is specified.<br>If the bg option is specified, a timeout or failure causes the mount(8) command to fork a child which continues to attempt to mount the export.  The parent immediately returns with a zero exit code.  This is known as a “background” mount.<br>If the local mount point directory is missing, the mount(8) command acts as if the mount request timed out.  This permits nested NFS mounts specified in /etc/fstab to proceed in any order  during  system  initialization,  even  if  some  NFS servers are not yet available.  Alternatively these issues can be addressed using an automounter (refer to automount(8) for details).</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://kindule.github.io/2018/09/25/Pod挂载Volume失败问题分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -340,7 +520,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-20 16:16:48" itemprop="dateModified" datetime="2018-10-20T16:16:48+08:00">2018-10-20</time>
+                <time title="Modified: 2018-10-22 12:04:06" itemprop="dateModified" datetime="2018-10-22T12:04:06+08:00">2018-10-22</time>
               
             
           </span>
@@ -1197,7 +1377,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>

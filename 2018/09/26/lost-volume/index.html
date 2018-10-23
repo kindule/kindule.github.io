@@ -108,25 +108,25 @@
 
 
 
-  <meta name="description" content="对于kubernetes primitive resource增加event非常简单，需要做如下几步 注册crd的scheme1utilruntime.Must(samplescheme.AddToScheme(scheme.Scheme)) 创建recorder1234eventBroadcaster := record.NewBroadcaster()eventBroadcaster.Star">
+  <meta name="description" content="卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储思路 环境  nfs csi   过程思考  attach成功  global mount成功  mount -v 应该不成功–检查mount是否成功  NFS未mount成功，原因执行mount nfs如果remote target没有也不会报错  12345[root@10-10-40-98 ~]# mount -t nf">
 <meta name="keywords" content="kubernetes">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s-add-crd-event">
-<meta property="og:url" content="http://kindule.github.io/2018/08/21/k8s-add-crd-event/index.html">
+<meta property="og:title" content="lost-volume">
+<meta property="og:url" content="http://kindule.github.io/2018/09/26/lost-volume/index.html">
 <meta property="og:site_name" content="Kindule">
-<meta property="og:description" content="对于kubernetes primitive resource增加event非常简单，需要做如下几步 注册crd的scheme1utilruntime.Must(samplescheme.AddToScheme(scheme.Scheme)) 创建recorder1234eventBroadcaster := record.NewBroadcaster()eventBroadcaster.Star">
+<meta property="og:description" content="卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储思路 环境  nfs csi   过程思考  attach成功  global mount成功  mount -v 应该不成功–检查mount是否成功  NFS未mount成功，原因执行mount nfs如果remote target没有也不会报错  12345[root@10-10-40-98 ~]# mount -t nf">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-10-17T10:49:30.072Z">
+<meta property="og:updated_time" content="2018-10-23T06:32:11.811Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="k8s-add-crd-event">
-<meta name="twitter:description" content="对于kubernetes primitive resource增加event非常简单，需要做如下几步 注册crd的scheme1utilruntime.Must(samplescheme.AddToScheme(scheme.Scheme)) 创建recorder1234eventBroadcaster := record.NewBroadcaster()eventBroadcaster.Star">
+<meta name="twitter:title" content="lost-volume">
+<meta name="twitter:description" content="卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储思路 环境  nfs csi   过程思考  attach成功  global mount成功  mount -v 应该不成功–检查mount是否成功  NFS未mount成功，原因执行mount nfs如果remote target没有也不会报错  12345[root@10-10-40-98 ~]# mount -t nf">
 
 
 
 
 
 
-  <link rel="canonical" href="http://kindule.github.io/2018/08/21/k8s-add-crd-event/"/>
+  <link rel="canonical" href="http://kindule.github.io/2018/09/26/lost-volume/"/>
 
 
 
@@ -136,7 +136,7 @@
   };
 </script>
 
-  <title>k8s-add-crd-event | Kindule</title>
+  <title>lost-volume | Kindule</title>
   
 
 
@@ -281,7 +281,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://kindule.github.io/2018/08/21/k8s-add-crd-event/">
+    <link itemprop="mainEntityOfPage" href="http://kindule.github.io/2018/09/26/lost-volume/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jin Ge">
@@ -298,7 +298,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">k8s-add-crd-event
+          <h1 class="post-title" itemprop="name headline">lost-volume
               
             
           </h1>
@@ -323,7 +323,7 @@
                 
               
 
-              <time title="Created: 2018-08-21 09:08:27" itemprop="dateCreated datePublished" datetime="2018-08-21T09:08:27+08:00">2018-08-21</time>
+              <time title="Created: 2018-09-26 11:00:41" itemprop="dateCreated datePublished" datetime="2018-09-26T11:00:41+08:00">2018-09-26</time>
             
 
             
@@ -340,7 +340,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 18:49:30" itemprop="dateModified" datetime="2018-10-17T18:49:30+08:00">2018-10-17</time>
+                <time title="Modified: 2018-10-23 14:32:11" itemprop="dateModified" datetime="2018-10-23T14:32:11+08:00">2018-10-23</time>
               
             
           </span>
@@ -373,10 +373,35 @@
       
 
       
-        <p>对于kubernetes primitive resource增加event非常简单，需要做如下几步</p>
-<h3 id="注册crd的scheme"><a href="#注册crd的scheme" class="headerlink" title="注册crd的scheme"></a>注册crd的scheme</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">utilruntime.Must(samplescheme.AddToScheme(scheme.Scheme))</span><br></pre></td></tr></table></figure>
-<h3 id="创建recorder"><a href="#创建recorder" class="headerlink" title="创建recorder"></a>创建recorder</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">eventBroadcaster := record.NewBroadcaster()</span><br><span class="line">eventBroadcaster.StartLogging(glog.Infof)</span><br><span class="line">eventBroadcaster.StartRecordingToSink(&amp;typedcorev1.EventSinkImpl&#123;Interface: kubeclientset.CoreV1().Events(<span class="string">""</span>)&#125;)</span><br><span class="line">recorder := eventBroadcaster.NewRecorder(scheme.Scheme, corev1.EventSource&#123;Component: controllerAgentName&#125;)</span><br></pre></td></tr></table></figure>
-<h3 id="通过recorder来记录事件"><a href="#通过recorder来记录事件" class="headerlink" title="通过recorder来记录事件"></a>通过recorder来记录事件</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">recorder.Event(foo, corev1.EventTypeNormal, SuccessSynced, MessageResourceSynced)</span><br></pre></td></tr></table></figure>
+        <h3 id="卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储"><a href="#卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储" class="headerlink" title="卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储"></a>卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储</h3><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><ul>
+<li><p>环境</p>
+<ul>
+<li>nfs</li>
+<li>csi</li>
+</ul>
+</li>
+<li><p>过程思考</p>
+<ul>
+<li><p>attach成功</p>
+</li>
+<li><p>global mount成功</p>
+</li>
+<li><p>mount -v 应该不成功–检查mount是否成功</p>
+<ul>
+<li><p>NFS未mount成功，原因<strong>执行mount nfs如果remote target没有也不会报错</strong></p>
+</li>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@10-10-40-98 ~]# mount -t nfs -o nolock,async,rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,actimeo=0,vers=3,timeo=600 172.16.130.1:pvc-3eef6820c13e11e8/root /mnt</span><br><span class="line">mount.nfs: backgrounding "172.16.130.1:pvc-3eef6820c13e11e8/root"</span><br><span class="line">mount.nfs: mount options: "rw,nolock,bg,hard,nointr,rsize=32768,wsize=32768,tcp,actimeo=0,vers=3,timeo=600"</span><br><span class="line">[root@10-10-40-98 ~]# echo $?</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>最终发现nfs mount参数配置不正确，参数<code>bg</code>释义，简单来讲mount时立即返回，然后后天执行nfs挂载，退出码一直为0</p>
+<blockquote>
+<p>bg / fg</p>
+<p>Determines  how  the  mount(8)  command  behaves if an attempt to mount an export fails.  The fg option causes mount(8) to exit with an error status if any part of the mount request times out or fails outright.  This is called a “foreground” mount, and is the default behavior if neither the fg nor bg mount option is specified.<br>If the bg option is specified, a timeout or failure causes the mount(8) command to fork a child which continues to attempt to mount the export.  The parent immediately returns with a zero exit code.  This is known as a “background” mount.<br>If the local mount point directory is missing, the mount(8) command acts as if the mount request timed out.  This permits nested NFS mounts specified in /etc/fstab to proceed in any order  during  system  initialization,  even  if  some  NFS servers are not yet available.  Alternatively these issues can be addressed using an automounter (refer to automount(8) for details).</p>
+</blockquote>
 
       
     </div>
@@ -410,15 +435,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/09/25/Pod挂载Volume失败问题分析/" rel="next" title="Pod挂载Volume失败问题分析">
+                <i class="fa fa-chevron-left"></i> Pod挂载Volume失败问题分析
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/27/access-internal-cluster/" rel="prev" title="access-internal-cluster">
-                access-internal-cluster <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -545,7 +570,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册crd的scheme"><span class="nav-number">1.</span> <span class="nav-text">注册crd的scheme</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建recorder"><span class="nav-number">2.</span> <span class="nav-text">创建recorder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过recorder来记录事件"><span class="nav-number">3.</span> <span class="nav-text">通过recorder来记录事件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储"><span class="nav-number">1.</span> <span class="nav-text">卷无法正常挂载，但是删除Pod，Pod被重新拉起能正常启动，使用本地存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#思路"><span class="nav-number">1.1.</span> <span class="nav-text">思路</span></a></li></ol></li></ol></div>
             
 
           </div>
