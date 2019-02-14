@@ -327,6 +327,22 @@
             
 
             
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-14 22:48:07" itemprop="dateModified" datetime="2019-02-14T22:48:07+08:00">2019-02-14</time>
+              
+            
           </span>
 
           
@@ -359,9 +375,10 @@
       
         
           
-            <p>自工作以来，一直以工程师的角色工作，常常会思考一个问题，如何在技术上获得更多成长？可能很多工程师和我一样也有这样的疑惑。当然这个问题有很多方面可以探讨，今天想跟大家分享一下，技术分享是如何带给我成长的。总结下来，认为分享带给我的成长很多，于我而言，认为技术分享带给我以下三点</p>
-<h3 id="查漏补缺"><a href="#查漏补缺" class="headerlink" title="查漏补缺"></a>查漏补缺</h3><p>技术分享，当拟定一个主题并且需要去实现这个主题的时候，头脑中肯定会有idea。但是当提笔开始落地的时候，往往会发现很难将idea连贯成为技术文章。比如，Kubernetes存储方面的各种组件，假设A B C三个组件，我也知道A B C大致做了什么，但是真要完成一篇《K8S存储系统概览》来讲清楚Kubernetes存储的时候，为什么需要A B C三个组件协作，A B C三个组件如何协作，会发现对于K8S存储系统的了解其实还有很多欠缺的地方，这个时候你就会回头再来通过代码和各种实现更加深入的了解此技术。</p>
+            <p>自工作以来，一直以工程师的角色工作，常常会思考一个问题，如何在技术上获得更多成长？可能很多工程师和我一样也有这样的疑惑。当然这个问题有很多方面可以探讨，今天想跟大家分享一下，技术分享是如何带给我成长的。总结下来，认为分享带给我的成长很多，于我而言，认为技术分享带给我以下四点</p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>技术分享，当拟定一个主题并且需要去实现这个主题的时候，头脑中肯定会有idea。但是当提笔开始落地的时候，往往会发现很难将idea连贯成为技术文章。比如，Kubernetes存储方面的各种组件，假设A B C三个组件，我也知道A B C大致做了什么，但是真要完成一篇《K8S存储系统概览》来讲清楚Kubernetes存储的时候，为什么需要A B C三个组件协作，A B C三个组件如何协作，会发现对于K8S存储系统的了解其实还有很多欠缺的地方，这个时候你就会回头再来通过代码和各种实现更加深入的了解此技术。</p>
 <h3 id="总结归纳"><a href="#总结归纳" class="headerlink" title="总结归纳"></a>总结归纳</h3><p>技术分享的目的，总归是要让别人了解你做的事情，要讲清楚一件事情，之前以为很简单，真正开始做技术分享才发现其实很难，因为你面对的读者很大可能不了解你所做的事情，他们和你不在一个上下文中，如何将你做的事情能够讲到让读者听懂，考验的是对技术的理解深度和总结归纳能力。</p>
+<h3 id="刻意练习"><a href="#刻意练习" class="headerlink" title="刻意练习"></a>刻意练习</h3><p>做技术常常有做笔记的习惯，做笔记是否能获得成长？</p>
 <h3 id="与业界交流"><a href="#与业界交流" class="headerlink" title="与业界交流"></a>与业界交流</h3><p>当完成一次次技术分享的时候，除了获得个人成长的收获，意料之外的是，业界也给了很多反馈，比如在完成容器相关文章后，在docker社区也有一些比较有深度的提问，比如我们之前招聘时也有面试者说听过我的技术分享。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总之，技术分享给我的不仅仅是技术上的成长，还带来了其他很多收获，谢谢！</p>
 
@@ -660,7 +677,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-22 12:04:06" itemprop="dateModified" datetime="2018-10-22T12:04:06+08:00">2018-10-22</time>
+                <time title="Modified: 2019-02-14 22:48:02" itemprop="dateModified" datetime="2019-02-14T22:48:02+08:00">2019-02-14</time>
               
             
           </span>
@@ -697,10 +714,10 @@
           
             <p>本文同步发布于<a href="https://mp.weixin.qq.com/s/L0SYc6vHZN9mZkWpePuoxg" target="_blank" rel="noopener">dockerone</a></p>
 <p>Kubernetes环境偶尔出现Statefulset中的Pod被删除，新启动的Pod（还是调度到原有节点）挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-09-20-090324.png" alt="image-20180919164047762"></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/2018-09-20-090324.png" alt="image-20180919164047762"></p>
 <p>在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。</p>
 <h3 id="存储系统简析"><a href="#存储系统简析" class="headerlink" title="存储系统简析"></a>存储系统简析</h3><p>存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同组件中，不同控制器的协作，如下图。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-10-08-035245.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/2018-10-08-035245.png" alt=""></p>
 <p>从三个维度分析</p>
 <ul>
 <li><p>从卷的生命周期来讲，卷被Pod使用或者卷被回收，会依赖顺序严格的几个阶段</p>
@@ -739,19 +756,19 @@
 <h3 id="Pod启动流程"><a href="#Pod启动流程" class="headerlink" title="Pod启动流程"></a>Pod启动流程</h3><p>假设scheduler已经完成worker node选择，确定调度的节点，此时启动Pod前，需要先完成卷映射到Pod路径中，结合前面的分析，整个过程如下</p>
 <ol>
 <li><p>卷分配，pvc绑定pv，由pv controller负责完成，结合<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/controller/volume/persistentvolume/pv_controller.go#L301" target="_blank" rel="noopener">相关代码</a></p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018002900.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018002900.png" alt=""></p>
 <p>此时pvc绑定pv</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014142538.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181014142538.png" alt=""></p>
 </li>
 <li><p>attach detach controlle，如果pod分配到worker node，并且对应卷已经创建，则将卷挂载到对应worker node，并且给worker node资源增加volume已经挂载对应卷的状态信息，结合相关<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/controller/volume/attachdetach/populator/desired_state_of_world_populator.go#L88" target="_blank" rel="noopener">代码1</a>和<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/controller/volume/attachdetach/reconciler/reconciler.go#L251" target="_blank" rel="noopener">代码2</a></p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018004733.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018004733.png" alt=""></p>
 <p>此时对应node资源状态中增加volume信息</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@10-10-88-152 ~]# kubectl get nodes 10-10-88-113 -o yaml </span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Node</span><br><span class="line">....</span><br><span class="line">  volumesAttached:</span><br><span class="line">  - devicePath: csi-add9fc778d9593d01818d65ccde7013e87327d9f675b47df42a34b860c581711</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4faa18f5bbbd11e8-1365</span><br><span class="line">  - devicePath: csi-5dd249387138238e8e2209eb471450a072dd6543adde7a6769c8461943c789ca</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa9b764bbbd11e8-1366</span><br><span class="line">  - devicePath: csi-bc9b81e32d84e8890d17568964c1e01af97b0c175e0b73d4bf30bba54e3f1a1e</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa94533bbbd11e8-1364</span><br><span class="line">  volumesInUse:</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa94533bbbd11e8-1364</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa9b764bbbd11e8-1366</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4faa18f5bbbd11e8-1365</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>volume manager在worker node中负责将卷挂载到对应路径</p>
 <ul>
 <li><p>pod分配到本worker node后，获取Pod需要的volume，通过对比node状态中的volumesAttached，确认volume是否已经attach到node节点，如果attach到node节点则将自身actualStateOfWorld中的volume状态设置成attached，对应<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/populator/desired_state_of_world_populator.go#L152" target="_blank" rel="noopener">代码1</a>、<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/reconciler/reconciler.go#L160" target="_blank" rel="noopener">代码2</a></p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018011611.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018011611.png" alt=""></p>
 </li>
 <li><p>如果已经attached成功，则进入到文件系统挂载流程，相关<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/reconciler/reconciler.go#L238" target="_blank" rel="noopener">代码</a></p>
 <ul>
@@ -760,7 +777,7 @@
 <li><p>映射到Pod对应路径，比如<code>/var/lib/kubelet/pods/49a5fede-b811-11e8-844f-fa7378845e00/volumes/kubernetes.io~csi/pvc-3ecd68c7b7d211e8/mount</code></p>
 </li>
 <li><p>actualStateOfWorld中设置volume为挂载成功状态</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018015029.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018015029.png" alt=""></p>
 </li>
 </ul>
 </li>
@@ -775,13 +792,13 @@
 <li><p>volume manager获取到Pod被删除的信息，会执行如下几步，相关<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/reconciler/reconciler.go#L160" target="_blank" rel="noopener">代码</a></p>
 <ul>
 <li><p>将Pod从desiredStateOfWorld的缓存信息中清除</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018024146.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018024146.png" alt=""></p>
 </li>
 <li><p>actualStateOfWorld中已经挂载的卷和desiredStateOfWorld发现Pod不应该挂载，执行UmountVolume操作，将Pod和卷映射关系解除，并将Pod从actualStateOfWorld的卷信息中剔除</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018024451.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018024451.png" alt=""></p>
 </li>
 <li><p>此时如果实际状态中卷没有关联任何Pod，则说明卷需要可以完全与节点分离，则先执行UnmountDevice将卷的globalpath umount掉，等到下次reconcile时执行MarkVolumeAsDetached将卷完全从实际状态中删除掉。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018024518.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018024518.png" alt=""></p>
 </li>
 </ul>
 </li>
@@ -956,7 +973,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 18:49:30" itemprop="dateModified" datetime="2018-10-17T18:49:30+08:00">2018-10-17</time>
+                <time title="Modified: 2019-02-14 22:46:40" itemprop="dateModified" datetime="2019-02-14T22:46:40+08:00">2019-02-14</time>
               
             
           </span>
@@ -991,14 +1008,14 @@
       
         
           
-            <p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180915150403.png" alt=""></p>
+            <p><img src="https://raw.githubusercontent.com/kindule/img/master/20180915150403.png" alt=""></p>
 <blockquote>
 <p>The primary purpose of architecture is to support the life cycle of the system. Good architecture makes the system easy to understand, easy to develop, easy to maintain, and easy to deploy. The ultimate goal is to minimize the lifetime cost of the system and to maximize programmer productivity.</p>
 </blockquote>
 <h2 id="什么是架构？"><a href="#什么是架构？" class="headerlink" title="什么是架构？"></a>什么是架构？</h2><p>架构关注的是高层抽象，脱离于底层细节。架构和设计有何不同？</p>
 <p>以设计房屋为例（IT业常常将软件工程与建筑工程类比），整体风格（欧式、日式）、房屋的形状（三室两厅还是四室三厅）、外观（方形还是举行）、立面以及房间的布局是为架构。深入局部会有大量细节，家具的摆放、灯具的位置、餐厅配色。所有细节又支撑了架构所做的决定。架构和细节就是整个房屋的完整设计。</p>
 <p>讲到软件开发，底层的细节和高层的架构才是整个软件开发的全部，它们共同决定了整个系统的模样。</p>
-<h2 id="编程范式"><a href="#编程范式" class="headerlink" title="编程范式"></a>编程范式</h2><p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180916082851.png" alt=""></p>
+<h2 id="编程范式"><a href="#编程范式" class="headerlink" title="编程范式"></a>编程范式</h2><p><img src="https://raw.githubusercontent.com/kindule/img/master/20180916082851.png" alt=""></p>
 <p>软件架构都是基于代码来实现的，所以谈到软件架构先从编程开始讨论，编程语言有很多，但常用的可以总结为几种<a href="https://zh.wikipedia.org/zh-hans/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%9E%8B" target="_blank" rel="noopener">范式</a>，关于编程范式的讨论和发展历史不在本文讨论范围之内，具体可以参考《冒号课堂》，也是非常推荐的一本书。</p>
 <h3 id="结构化编程"><a href="#结构化编程" class="headerlink" title="结构化编程"></a>结构化编程</h3><p>结构化编程让我们递归的将一个程序分解成一系列的小的可以测试的子程序。然后我们对每个子程序进行测试，如果子程序测试成功，程序正常执行。结构化编程引入了for、while等循环结构，来取代传统的goto，并且希望借此来改善程序的可读性、质量以及开发时间。</p>
 <h3 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h3><p>作者说，好架构的基础就是对面向对象编程的深刻理解，那么怎么理解面向对象编程呢？</p>
@@ -1035,7 +1052,7 @@
 <p>The fact that OO languages provide safe and convenient polymorphism means that any source code dependency, no matter where it is, can be inverted.</p>
 <p>With this approacdh, software architects working in systems written in OO languages have absolute control over the direction of all source code dependencies in the system.They are not constrained to align those dependencies with the flow of control.No matter which module does the calling and which module is called, the software architect can point the source code dependency in either direction.</p>
 </blockquote>
-<h2 id="Design-Principles"><a href="#Design-Principles" class="headerlink" title="Design Principles"></a>Design Principles</h2><p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180915150135.png" alt=""></p>
+<h2 id="Design-Principles"><a href="#Design-Principles" class="headerlink" title="Design Principles"></a>Design Principles</h2><p><img src="https://raw.githubusercontent.com/kindule/img/master/20180915150135.png" alt=""></p>
 <p><em>S.O.L.I.D应该算是《Clean Architecture》这本书前半部分的重头戏</em></p>
 <blockquote>
 <p>The goal of the principles is the creation of mid-level software structures that:</p>
@@ -1052,17 +1069,17 @@
 <p>最近阅读Kubernetes存储相关代码，又阅读了《Clean Architecture》此书，顿时甚觉豁然开朗，原来kubernetes在代码设计上几乎全部遵循SOLID设计原则，且看</p>
 <ul>
 <li><p>volume manager中几乎所有的控制流依赖，都会基于interface实现依赖反转</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180929213659.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20180929213659.png" alt=""></p>
 </li>
 <li><p>VolumePlugin定义Mount/Umount/…方法，ceph/ebs/gcd/glusterfs众多plugin只需依据里氏替换原则实现volumePlugin接口即可实现存储类型扩展</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180929222513.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20180929222513.png" alt=""></p>
 </li>
 <li><p>遵循接口隔离原则，如无必要勿增实体（奥卡姆剃刀理论），不设计大而全的接口，volumePlugin提供最小化mount/umount等基础方法，ExpandableVolumePlugin/BlockVolumePlugin除了具备volumePlugin接口的方法还各自包含自身业务需要方法</p>
 </li>
 </ul>
 <p>SOLID告诉我们如何设计类，如何构建类与类之间的关系，如何设计组件内层次结构。SOLID结合我们对业务的掌握，一个容易维护、容易扩展的组件即可实现。</p>
 <h2 id="Package-Principles"><a href="#Package-Principles" class="headerlink" title="Package Principles"></a>Package Principles</h2><h3 id="模块的内聚"><a href="#模块的内聚" class="headerlink" title="模块的内聚"></a>模块的内聚</h3><p>用来指导如何讲类聚合成为package</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181004113403.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181004113403.png" alt=""></p>
 <h4 id="REP：The-Reuse-Release-Equivalence-Principle"><a href="#REP：The-Reuse-Release-Equivalence-Principle" class="headerlink" title="REP：The Reuse/Release Equivalence Principle"></a>REP：The Reuse/Release Equivalence Principle</h4><blockquote>
 <p>The granule of reuse is the granule of release.</p>
 </blockquote>
@@ -1120,10 +1137,10 @@
 <li>接近(0,0)说明组件，抽象程度低，组件稳定性高，太低则组件可扩展性差并且不易修改，可以想想SQL</li>
 <li>接近(1,1)说明组件，抽象程序高，组件稳定性低，大部分都是抽象且不稳定的组件，说明这个组件没什么用处</li>
 </ol>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181005192831.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181005192831.png" alt=""></p>
 <h5 id="The-Main-Sequence"><a href="#The-Main-Sequence" class="headerlink" title="The Main Sequence"></a>The Main Sequence</h5><p>​    作者认为组件的A和I值分布在这样一条线上是最好，即连接(0,1)和(1,0)的直线，作者称为<code>The Main Sequence</code>组件的(A,I)，越靠近<code>The Main Sequence</code>架构越健康。</p>
 <h5 id="Distance"><a href="#Distance" class="headerlink" title="Distance"></a>Distance</h5><p><code>D=A+I-1</code>是到<code>The Main Sequence</code>的距离，D值在0-1之间，D越小说明越接近<code>The Main Sequence</code>，D越大说明越远离<code>The Main Sequence</code>，这样，我们可以通过每次包发布时，D值确认组件的健康程度（是否朝着<code>The Main Sequence</code>）发展。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181005194455.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181005194455.png" alt=""></p>
 
           
         
@@ -1240,7 +1257,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 18:49:30" itemprop="dateModified" datetime="2018-10-17T18:49:30+08:00">2018-10-17</time>
+                <time title="Modified: 2019-02-14 22:45:13" itemprop="dateModified" datetime="2019-02-14T22:45:13+08:00">2019-02-14</time>
               
             
           </span>
@@ -1276,7 +1293,7 @@
         
           
             <h2 id="设置insecure方式访问api-server"><a href="#设置insecure方式访问api-server" class="headerlink" title="设置insecure方式访问api-server"></a>设置insecure方式访问api-server</h2><p>很多时候kubernetes集群控制面服务都监听在集群内部网络中，想通过公共网络访问api-server时会比较麻烦，比如在如下网络结构中，如果是在开发环境下可以设置api-server启用insecrue接口，这样方便本地程序连接到api-server进行开发测试。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-09-01-071433.png" alt="image-20180901151431483"></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/2018-09-01-071433.png" alt="image-20180901151431483"></p>
 <h2 id="具体方案如下"><a href="#具体方案如下" class="headerlink" title="具体方案如下"></a>具体方案如下</h2><h3 id="api-server"><a href="#api-server" class="headerlink" title="api-server"></a>api-server</h3><p>修改api-server配置文件，我们假设master节点有业务网络IP 192.168.10.2，增加如下两个参数，记得将insecure-port=0注释掉</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- --insecure-bind-address=192.168.10.2</span><br><span class="line">- --insecure-port=8181</span><br><span class="line"><span class="meta">#</span> - --insecure-port=0</span><br></pre></td></tr></table></figure>
 <h3 id="config"><a href="#config" class="headerlink" title="config"></a>config</h3><p>kubeconfig文件按照以下模板配置，记得修改<public-ip>为api-server监听的地址</public-ip></p>
@@ -1578,7 +1595,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

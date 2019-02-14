@@ -116,21 +116,21 @@
 <meta property="og:site_name" content="Kindule">
 <meta property="og:description" content="本文同步发布于dockerone Kubernetes环境偶尔出现Statefulset中的Pod被删除，新启动的Pod（还是调度到原有节点）挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。  在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。 存储系统简析存储也是Kubernetes中比较重要而复">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-09-20-090324.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-10-08-035245.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181018002900.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181014142538.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181018004733.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181018011611.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181018015029.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181018024146.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181018024451.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181018024518.png">
-<meta property="og:updated_time" content="2018-10-22T04:04:06.706Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/2018-09-20-090324.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/2018-10-08-035245.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181018002900.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181014142538.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181018004733.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181018011611.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181018015029.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181018024146.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181018024451.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181018024518.png">
+<meta property="og:updated_time" content="2019-02-14T14:48:02.860Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pod挂载Volume失败问题分析">
 <meta name="twitter:description" content="本文同步发布于dockerone Kubernetes环境偶尔出现Statefulset中的Pod被删除，新启动的Pod（还是调度到原有节点）挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。  在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。 存储系统简析存储也是Kubernetes中比较重要而复">
-<meta name="twitter:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-09-20-090324.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/kindule/img/master/2018-09-20-090324.png">
 
 
 
@@ -351,7 +351,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-22 12:04:06" itemprop="dateModified" datetime="2018-10-22T12:04:06+08:00">2018-10-22</time>
+                <time title="Modified: 2019-02-14 22:48:02" itemprop="dateModified" datetime="2019-02-14T22:48:02+08:00">2019-02-14</time>
               
             
           </span>
@@ -386,10 +386,10 @@
       
         <p>本文同步发布于<a href="https://mp.weixin.qq.com/s/L0SYc6vHZN9mZkWpePuoxg" target="_blank" rel="noopener">dockerone</a></p>
 <p>Kubernetes环境偶尔出现Statefulset中的Pod被删除，新启动的Pod（还是调度到原有节点）挂载volume失败的问题，如下图，经过一番定位分析，也让我们对于Kubernetes系统复杂程度有了新的认知。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-09-20-090324.png" alt="image-20180919164047762"></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/2018-09-20-090324.png" alt="image-20180919164047762"></p>
 <p>在分析此问题之前，作为相关背景知识，先简单介绍对于Kubernetes存储系统的理解。</p>
 <h3 id="存储系统简析"><a href="#存储系统简析" class="headerlink" title="存储系统简析"></a>存储系统简析</h3><p>存储也是Kubernetes中比较重要而复杂的系统，功能比较庞大，涉及到不同组件中，不同控制器的协作，如下图。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-10-08-035245.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/2018-10-08-035245.png" alt=""></p>
 <p>从三个维度分析</p>
 <ul>
 <li><p>从卷的生命周期来讲，卷被Pod使用或者卷被回收，会依赖顺序严格的几个阶段</p>
@@ -428,19 +428,19 @@
 <h3 id="Pod启动流程"><a href="#Pod启动流程" class="headerlink" title="Pod启动流程"></a>Pod启动流程</h3><p>假设scheduler已经完成worker node选择，确定调度的节点，此时启动Pod前，需要先完成卷映射到Pod路径中，结合前面的分析，整个过程如下</p>
 <ol>
 <li><p>卷分配，pvc绑定pv，由pv controller负责完成，结合<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/controller/volume/persistentvolume/pv_controller.go#L301" target="_blank" rel="noopener">相关代码</a></p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018002900.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018002900.png" alt=""></p>
 <p>此时pvc绑定pv</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181014142538.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181014142538.png" alt=""></p>
 </li>
 <li><p>attach detach controlle，如果pod分配到worker node，并且对应卷已经创建，则将卷挂载到对应worker node，并且给worker node资源增加volume已经挂载对应卷的状态信息，结合相关<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/controller/volume/attachdetach/populator/desired_state_of_world_populator.go#L88" target="_blank" rel="noopener">代码1</a>和<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/controller/volume/attachdetach/reconciler/reconciler.go#L251" target="_blank" rel="noopener">代码2</a></p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018004733.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018004733.png" alt=""></p>
 <p>此时对应node资源状态中增加volume信息</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@10-10-88-152 ~]# kubectl get nodes 10-10-88-113 -o yaml </span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Node</span><br><span class="line">....</span><br><span class="line">  volumesAttached:</span><br><span class="line">  - devicePath: csi-add9fc778d9593d01818d65ccde7013e87327d9f675b47df42a34b860c581711</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4faa18f5bbbd11e8-1365</span><br><span class="line">  - devicePath: csi-5dd249387138238e8e2209eb471450a072dd6543adde7a6769c8461943c789ca</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa9b764bbbd11e8-1366</span><br><span class="line">  - devicePath: csi-bc9b81e32d84e8890d17568964c1e01af97b0c175e0b73d4bf30bba54e3f1a1e</span><br><span class="line">    name: kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa94533bbbd11e8-1364</span><br><span class="line">  volumesInUse:</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa94533bbbd11e8-1364</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4fa9b764bbbd11e8-1366</span><br><span class="line">  - kubernetes.io/csi/csi-qcfsplugin^csi-qcfs-volume-4faa18f5bbbd11e8-1365</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>volume manager在worker node中负责将卷挂载到对应路径</p>
 <ul>
 <li><p>pod分配到本worker node后，获取Pod需要的volume，通过对比node状态中的volumesAttached，确认volume是否已经attach到node节点，如果attach到node节点则将自身actualStateOfWorld中的volume状态设置成attached，对应<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/populator/desired_state_of_world_populator.go#L152" target="_blank" rel="noopener">代码1</a>、<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/reconciler/reconciler.go#L160" target="_blank" rel="noopener">代码2</a></p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018011611.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018011611.png" alt=""></p>
 </li>
 <li><p>如果已经attached成功，则进入到文件系统挂载流程，相关<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/reconciler/reconciler.go#L238" target="_blank" rel="noopener">代码</a></p>
 <ul>
@@ -449,7 +449,7 @@
 <li><p>映射到Pod对应路径，比如<code>/var/lib/kubelet/pods/49a5fede-b811-11e8-844f-fa7378845e00/volumes/kubernetes.io~csi/pvc-3ecd68c7b7d211e8/mount</code></p>
 </li>
 <li><p>actualStateOfWorld中设置volume为挂载成功状态</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018015029.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018015029.png" alt=""></p>
 </li>
 </ul>
 </li>
@@ -464,13 +464,13 @@
 <li><p>volume manager获取到Pod被删除的信息，会执行如下几步，相关<a href="https://github.com/kubernetes/kubernetes/blob/release-1.10/pkg/kubelet/volumemanager/reconciler/reconciler.go#L160" target="_blank" rel="noopener">代码</a></p>
 <ul>
 <li><p>将Pod从desiredStateOfWorld的缓存信息中清除</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018024146.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018024146.png" alt=""></p>
 </li>
 <li><p>actualStateOfWorld中已经挂载的卷和desiredStateOfWorld发现Pod不应该挂载，执行UmountVolume操作，将Pod和卷映射关系解除，并将Pod从actualStateOfWorld的卷信息中剔除</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018024451.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018024451.png" alt=""></p>
 </li>
 <li><p>此时如果实际状态中卷没有关联任何Pod，则说明卷需要可以完全与节点分离，则先执行UnmountDevice将卷的globalpath umount掉，等到下次reconcile时执行MarkVolumeAsDetached将卷完全从实际状态中删除掉。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181018024518.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181018024518.png" alt=""></p>
 </li>
 </ul>
 </li>
@@ -721,7 +721,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

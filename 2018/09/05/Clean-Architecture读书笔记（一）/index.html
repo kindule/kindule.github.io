@@ -116,19 +116,19 @@
 <meta property="og:site_name" content="Kindule">
 <meta property="og:description" content="The primary purpose of architecture is to support the life cycle of the system. Good architecture makes the system easy to understand, easy to develop, easy to maintain, and easy to deploy. The ulti">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20180915150403.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20180916082851.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20180915150135.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20180929213659.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20180929222513.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181004113403.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181005192831.png">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/20181005194455.png">
-<meta property="og:updated_time" content="2018-10-17T10:49:30.073Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20180915150403.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20180916082851.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20180915150135.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20180929213659.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20180929222513.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181004113403.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181005192831.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/20181005194455.png">
+<meta property="og:updated_time" content="2019-02-14T14:46:40.640Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Clean Architecture读书笔记（一）">
 <meta name="twitter:description" content="The primary purpose of architecture is to support the life cycle of the system. Good architecture makes the system easy to understand, easy to develop, easy to maintain, and easy to deploy. The ulti">
-<meta name="twitter:image" content="http://p1sz5a5h3.bkt.clouddn.com/20180915150403.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/kindule/img/master/20180915150403.png">
 
 
 
@@ -349,7 +349,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 18:49:30" itemprop="dateModified" datetime="2018-10-17T18:49:30+08:00">2018-10-17</time>
+                <time title="Modified: 2019-02-14 22:46:40" itemprop="dateModified" datetime="2019-02-14T22:46:40+08:00">2019-02-14</time>
               
             
           </span>
@@ -382,14 +382,14 @@
       
 
       
-        <p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180915150403.png" alt=""></p>
+        <p><img src="https://raw.githubusercontent.com/kindule/img/master/20180915150403.png" alt=""></p>
 <blockquote>
 <p>The primary purpose of architecture is to support the life cycle of the system. Good architecture makes the system easy to understand, easy to develop, easy to maintain, and easy to deploy. The ultimate goal is to minimize the lifetime cost of the system and to maximize programmer productivity.</p>
 </blockquote>
 <h2 id="什么是架构？"><a href="#什么是架构？" class="headerlink" title="什么是架构？"></a>什么是架构？</h2><p>架构关注的是高层抽象，脱离于底层细节。架构和设计有何不同？</p>
 <p>以设计房屋为例（IT业常常将软件工程与建筑工程类比），整体风格（欧式、日式）、房屋的形状（三室两厅还是四室三厅）、外观（方形还是举行）、立面以及房间的布局是为架构。深入局部会有大量细节，家具的摆放、灯具的位置、餐厅配色。所有细节又支撑了架构所做的决定。架构和细节就是整个房屋的完整设计。</p>
 <p>讲到软件开发，底层的细节和高层的架构才是整个软件开发的全部，它们共同决定了整个系统的模样。</p>
-<h2 id="编程范式"><a href="#编程范式" class="headerlink" title="编程范式"></a>编程范式</h2><p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180916082851.png" alt=""></p>
+<h2 id="编程范式"><a href="#编程范式" class="headerlink" title="编程范式"></a>编程范式</h2><p><img src="https://raw.githubusercontent.com/kindule/img/master/20180916082851.png" alt=""></p>
 <p>软件架构都是基于代码来实现的，所以谈到软件架构先从编程开始讨论，编程语言有很多，但常用的可以总结为几种<a href="https://zh.wikipedia.org/zh-hans/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%9E%8B" target="_blank" rel="noopener">范式</a>，关于编程范式的讨论和发展历史不在本文讨论范围之内，具体可以参考《冒号课堂》，也是非常推荐的一本书。</p>
 <h3 id="结构化编程"><a href="#结构化编程" class="headerlink" title="结构化编程"></a>结构化编程</h3><p>结构化编程让我们递归的将一个程序分解成一系列的小的可以测试的子程序。然后我们对每个子程序进行测试，如果子程序测试成功，程序正常执行。结构化编程引入了for、while等循环结构，来取代传统的goto，并且希望借此来改善程序的可读性、质量以及开发时间。</p>
 <h3 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h3><p>作者说，好架构的基础就是对面向对象编程的深刻理解，那么怎么理解面向对象编程呢？</p>
@@ -426,7 +426,7 @@
 <p>The fact that OO languages provide safe and convenient polymorphism means that any source code dependency, no matter where it is, can be inverted.</p>
 <p>With this approacdh, software architects working in systems written in OO languages have absolute control over the direction of all source code dependencies in the system.They are not constrained to align those dependencies with the flow of control.No matter which module does the calling and which module is called, the software architect can point the source code dependency in either direction.</p>
 </blockquote>
-<h2 id="Design-Principles"><a href="#Design-Principles" class="headerlink" title="Design Principles"></a>Design Principles</h2><p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180915150135.png" alt=""></p>
+<h2 id="Design-Principles"><a href="#Design-Principles" class="headerlink" title="Design Principles"></a>Design Principles</h2><p><img src="https://raw.githubusercontent.com/kindule/img/master/20180915150135.png" alt=""></p>
 <p><em>S.O.L.I.D应该算是《Clean Architecture》这本书前半部分的重头戏</em></p>
 <blockquote>
 <p>The goal of the principles is the creation of mid-level software structures that:</p>
@@ -443,17 +443,17 @@
 <p>最近阅读Kubernetes存储相关代码，又阅读了《Clean Architecture》此书，顿时甚觉豁然开朗，原来kubernetes在代码设计上几乎全部遵循SOLID设计原则，且看</p>
 <ul>
 <li><p>volume manager中几乎所有的控制流依赖，都会基于interface实现依赖反转</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180929213659.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20180929213659.png" alt=""></p>
 </li>
 <li><p>VolumePlugin定义Mount/Umount/…方法，ceph/ebs/gcd/glusterfs众多plugin只需依据里氏替换原则实现volumePlugin接口即可实现存储类型扩展</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20180929222513.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20180929222513.png" alt=""></p>
 </li>
 <li><p>遵循接口隔离原则，如无必要勿增实体（奥卡姆剃刀理论），不设计大而全的接口，volumePlugin提供最小化mount/umount等基础方法，ExpandableVolumePlugin/BlockVolumePlugin除了具备volumePlugin接口的方法还各自包含自身业务需要方法</p>
 </li>
 </ul>
 <p>SOLID告诉我们如何设计类，如何构建类与类之间的关系，如何设计组件内层次结构。SOLID结合我们对业务的掌握，一个容易维护、容易扩展的组件即可实现。</p>
 <h2 id="Package-Principles"><a href="#Package-Principles" class="headerlink" title="Package Principles"></a>Package Principles</h2><h3 id="模块的内聚"><a href="#模块的内聚" class="headerlink" title="模块的内聚"></a>模块的内聚</h3><p>用来指导如何讲类聚合成为package</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181004113403.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181004113403.png" alt=""></p>
 <h4 id="REP：The-Reuse-Release-Equivalence-Principle"><a href="#REP：The-Reuse-Release-Equivalence-Principle" class="headerlink" title="REP：The Reuse/Release Equivalence Principle"></a>REP：The Reuse/Release Equivalence Principle</h4><blockquote>
 <p>The granule of reuse is the granule of release.</p>
 </blockquote>
@@ -511,10 +511,10 @@
 <li>接近(0,0)说明组件，抽象程度低，组件稳定性高，太低则组件可扩展性差并且不易修改，可以想想SQL</li>
 <li>接近(1,1)说明组件，抽象程序高，组件稳定性低，大部分都是抽象且不稳定的组件，说明这个组件没什么用处</li>
 </ol>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181005192831.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181005192831.png" alt=""></p>
 <h5 id="The-Main-Sequence"><a href="#The-Main-Sequence" class="headerlink" title="The Main Sequence"></a>The Main Sequence</h5><p>​    作者认为组件的A和I值分布在这样一条线上是最好，即连接(0,1)和(1,0)的直线，作者称为<code>The Main Sequence</code>组件的(A,I)，越靠近<code>The Main Sequence</code>架构越健康。</p>
 <h5 id="Distance"><a href="#Distance" class="headerlink" title="Distance"></a>Distance</h5><p><code>D=A+I-1</code>是到<code>The Main Sequence</code>的距离，D值在0-1之间，D越小说明越接近<code>The Main Sequence</code>，D越大说明越远离<code>The Main Sequence</code>，这样，我们可以通过每次包发布时，D值确认组件的健康程度（是否朝着<code>The Main Sequence</code>）发展。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/20181005194455.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/20181005194455.png" alt=""></p>
 
       
     </div>
@@ -707,7 +707,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

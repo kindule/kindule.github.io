@@ -116,12 +116,12 @@
 <meta property="og:site_name" content="Kindule">
 <meta property="og:description" content="设置insecure方式访问api-server很多时候kubernetes集群控制面服务都监听在集群内部网络中，想通过公共网络访问api-server时会比较麻烦，比如在如下网络结构中，如果是在开发环境下可以设置api-server启用insecrue接口，这样方便本地程序连接到api-server进行开发测试。  具体方案如下api-server修改api-server配置文件，我们假设mas">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-09-01-071433.png">
-<meta property="og:updated_time" content="2018-10-17T10:49:30.074Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/kindule/img/master/2018-09-01-071433.png">
+<meta property="og:updated_time" content="2019-02-14T14:45:13.022Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="access-internal-cluster">
 <meta name="twitter:description" content="设置insecure方式访问api-server很多时候kubernetes集群控制面服务都监听在集群内部网络中，想通过公共网络访问api-server时会比较麻烦，比如在如下网络结构中，如果是在开发环境下可以设置api-server启用insecrue接口，这样方便本地程序连接到api-server进行开发测试。  具体方案如下api-server修改api-server配置文件，我们假设mas">
-<meta name="twitter:image" content="http://p1sz5a5h3.bkt.clouddn.com/2018-09-01-071433.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/kindule/img/master/2018-09-01-071433.png">
 
 
 
@@ -342,7 +342,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-17 18:49:30" itemprop="dateModified" datetime="2018-10-17T18:49:30+08:00">2018-10-17</time>
+                <time title="Modified: 2019-02-14 22:45:13" itemprop="dateModified" datetime="2019-02-14T22:45:13+08:00">2019-02-14</time>
               
             
           </span>
@@ -376,7 +376,7 @@
 
       
         <h2 id="设置insecure方式访问api-server"><a href="#设置insecure方式访问api-server" class="headerlink" title="设置insecure方式访问api-server"></a>设置insecure方式访问api-server</h2><p>很多时候kubernetes集群控制面服务都监听在集群内部网络中，想通过公共网络访问api-server时会比较麻烦，比如在如下网络结构中，如果是在开发环境下可以设置api-server启用insecrue接口，这样方便本地程序连接到api-server进行开发测试。</p>
-<p><img src="http://p1sz5a5h3.bkt.clouddn.com/2018-09-01-071433.png" alt="image-20180901151431483"></p>
+<p><img src="https://raw.githubusercontent.com/kindule/img/master/2018-09-01-071433.png" alt="image-20180901151431483"></p>
 <h2 id="具体方案如下"><a href="#具体方案如下" class="headerlink" title="具体方案如下"></a>具体方案如下</h2><h3 id="api-server"><a href="#api-server" class="headerlink" title="api-server"></a>api-server</h3><p>修改api-server配置文件，我们假设master节点有业务网络IP 192.168.10.2，增加如下两个参数，记得将insecure-port=0注释掉</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- --insecure-bind-address=192.168.10.2</span><br><span class="line">- --insecure-port=8181</span><br><span class="line"><span class="meta">#</span> - --insecure-port=0</span><br></pre></td></tr></table></figure>
 <h3 id="config"><a href="#config" class="headerlink" title="config"></a>config</h3><p>kubeconfig文件按照以下模板配置，记得修改<public-ip>为api-server监听的地址</public-ip></p>
@@ -573,7 +573,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
