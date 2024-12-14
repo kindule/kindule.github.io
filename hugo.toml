@@ -1,0 +1,4 @@
+baseURL = 'https://kindule.github.io/'
+languageCode = 'zh'
+title = '只是为了好玩'
+theme = 'hugo-theme-relearn'
