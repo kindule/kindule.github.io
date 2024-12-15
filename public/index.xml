@@ -6,14 +6,28 @@
     <description></description>
     <generator>Hugo</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 14 Dec 2024 12:07:56 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 14 Dec 2024 13:13:56 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Posts</title>
-      <link>http://localhost:1313/posts/index.html</link>
-      <pubDate>Sat, 14 Dec 2024 12:07:56 +0800</pubDate>
-      <guid>http://localhost:1313/posts/index.html</guid>
-      <description></description>
+      <title>存储系统</title>
+      <link>http://localhost:1313/storagesystem/index.html</link>
+      <pubDate>Sat, 14 Dec 2024 13:13:56 +0800</pubDate>
+      <guid>http://localhost:1313/storagesystem/index.html</guid>
+      <description>存储系统技术以及相关原理研究</description>
+    </item>
+    <item>
+      <title>操作系统</title>
+      <link>http://localhost:1313/os/index.html</link>
+      <pubDate>Sat, 14 Dec 2024 13:13:56 +0800</pubDate>
+      <guid>http://localhost:1313/os/index.html</guid>
+      <description>操作系统技术以及相关原理研究</description>
+    </item>
+    <item>
+      <title>数据库</title>
+      <link>http://localhost:1313/database/index.html</link>
+      <pubDate>Sat, 14 Dec 2024 13:13:56 +0800</pubDate>
+      <guid>http://localhost:1313/database/index.html</guid>
+      <description>数据库技术以及相关原理研究</description>
     </item>
   </channel>
 </rss>

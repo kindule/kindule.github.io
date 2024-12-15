@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.139.4">
+    <meta name="generator" content="Relearn 7.2.1">
+    <meta name="description" content="借用一张图，来解释 主备同步的详细过程和一致性保证机制如下：
+主库事务提交流程（两阶段提交） -- 第一阶段：准备阶段 XA PREPARE - 写入redo log（prepare状态） - 记录prepare_lsn -- 第二阶段：提交阶段 XA COMMIT - 写入binlog - 写入redo log（commit状态） 详细执行步骤 a) 主库端：
+事务执行过程中产生redo log（内存中） prepare阶段：将redo log写入磁盘（prepare状态） 写入binlog到磁盘 commit阶段：将redo log状态改为commit 如果开启半同步复制，等待从库确认 返回客户端提交成功 b) 从库端：
+IO线程接收主库binlog 写入relay log 返回接收确认（半同步复制） SQL线程读取relay log 重放SQL语句 记录应用位点和GTID 一致性保证机制 a) 两阶段提交保证：
+-- 主库配置 set global sync_binlog=1; -- 确保binlog即时写入 set global innodb_flush_log_at_trx_commit=1; -- 确保redo log即时写入 b) binlog与redo log关联：
+binlog_log_pos：记录binlog位置 last_committed：记录提交序号 sequence_number：记录序列号 c) GTID保证：">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="一条SQL解释MySQL的主从复制原理 :: 只是为了好玩">
+    <meta name="twitter:description" content="借用一张图，来解释 主备同步的详细过程和一致性保证机制如下：
+主库事务提交流程（两阶段提交） -- 第一阶段：准备阶段 XA PREPARE - 写入redo log（prepare状态） - 记录prepare_lsn -- 第二阶段：提交阶段 XA COMMIT - 写入binlog - 写入redo log（commit状态） 详细执行步骤 a) 主库端：
+事务执行过程中产生redo log（内存中） prepare阶段：将redo log写入磁盘（prepare状态） 写入binlog到磁盘 commit阶段：将redo log状态改为commit 如果开启半同步复制，等待从库确认 返回客户端提交成功 b) 从库端：
+IO线程接收主库binlog 写入relay log 返回接收确认（半同步复制） SQL线程读取relay log 重放SQL语句 记录应用位点和GTID 一致性保证机制 a) 两阶段提交保证：
+-- 主库配置 set global sync_binlog=1; -- 确保binlog即时写入 set global innodb_flush_log_at_trx_commit=1; -- 确保redo log即时写入 b) binlog与redo log关联：
+binlog_log_pos：记录binlog位置 last_committed：记录提交序号 sequence_number：记录序列号 c) GTID保证：">
+    <meta property="og:url" content="http://localhost:1313/database/mysqlabc01/index.html">
+    <meta property="og:site_name" content="只是为了好玩">
+    <meta property="og:title" content="一条SQL解释MySQL的主从复制原理 :: 只是为了好玩">
+    <meta property="og:description" content="借用一张图，来解释 主备同步的详细过程和一致性保证机制如下：
+主库事务提交流程（两阶段提交） -- 第一阶段：准备阶段 XA PREPARE - 写入redo log（prepare状态） - 记录prepare_lsn -- 第二阶段：提交阶段 XA COMMIT - 写入binlog - 写入redo log（commit状态） 详细执行步骤 a) 主库端：
+事务执行过程中产生redo log（内存中） prepare阶段：将redo log写入磁盘（prepare状态） 写入binlog到磁盘 commit阶段：将redo log状态改为commit 如果开启半同步复制，等待从库确认 返回客户端提交成功 b) 从库端：
+IO线程接收主库binlog 写入relay log 返回接收确认（半同步复制） SQL线程读取relay log 重放SQL语句 记录应用位点和GTID 一致性保证机制 a) 两阶段提交保证：
+-- 主库配置 set global sync_binlog=1; -- 确保binlog即时写入 set global innodb_flush_log_at_trx_commit=1; -- 确保redo log即时写入 b) binlog与redo log关联：
+binlog_log_pos：记录binlog位置 last_committed：记录提交序号 sequence_number：记录序列号 c) GTID保证：">
+    <meta property="og:locale" content="zh">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="数据库">
+    <meta property="article:published_time" content="2024-12-14T13:13:56+08:00">
+    <meta property="article:modified_time" content="2024-12-14T13:13:56+08:00">
+    <meta itemprop="name" content="一条SQL解释MySQL的主从复制原理 :: 只是为了好玩">
+    <meta itemprop="description" content="借用一张图，来解释 主备同步的详细过程和一致性保证机制如下：
+主库事务提交流程（两阶段提交） -- 第一阶段：准备阶段 XA PREPARE - 写入redo log（prepare状态） - 记录prepare_lsn -- 第二阶段：提交阶段 XA COMMIT - 写入binlog - 写入redo log（commit状态） 详细执行步骤 a) 主库端：
+事务执行过程中产生redo log（内存中） prepare阶段：将redo log写入磁盘（prepare状态） 写入binlog到磁盘 commit阶段：将redo log状态改为commit 如果开启半同步复制，等待从库确认 返回客户端提交成功 b) 从库端：
+IO线程接收主库binlog 写入relay log 返回接收确认（半同步复制） SQL线程读取relay log 重放SQL语句 记录应用位点和GTID 一致性保证机制 a) 两阶段提交保证：
+-- 主库配置 set global sync_binlog=1; -- 确保binlog即时写入 set global innodb_flush_log_at_trx_commit=1; -- 确保redo log即时写入 b) binlog与redo log关联：
+binlog_log_pos：记录binlog位置 last_committed：记录提交序号 sequence_number：记录序列号 c) GTID保证：">
+    <meta itemprop="datePublished" content="2024-12-14T13:13:56+08:00">
+    <meta itemprop="dateModified" content="2024-12-14T13:13:56+08:00">
+    <meta itemprop="wordCount" content="159">
+    <title>一条SQL解释MySQL的主从复制原理 :: 只是为了好玩</title>
+    <link href="/css/fontawesome-all.min.css?1734282623" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1734282623" rel="stylesheet"></noscript>
+    <link href="/css/auto-complete.css?1734282623" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1734282623" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1734282623" rel="stylesheet">
+    <link href="/css/theme.css?1734282623" rel="stylesheet">
+    <link href="/css/format-html.css?1734282623" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313';
+      window.relearn.min = ``;
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.localStorage.setItem(window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.localStorage.getItem(window.relearn.absBaseUri + "/variant");
+        var select = document.querySelector("#R-select-variant");
+        if (select) {
+          select.value = variant;
+        }
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.localStorage.getItem(window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.localStorage.setItem(window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/database/mysqlabc01/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/index.html"><span itemprop="name">只是为了好玩</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/database/index.html"><span itemprop="name">数据库</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">一条SQL解释MySQL的主从复制原理</span><meta itemprop="position" content="3"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/database/mysqlabc02/index.html" title="Mysqlabc02 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><span class="topbar-control"><i class="fa-fw fas fa-chevron-right"></i></span>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable database" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="一条sql解释mysql的主从复制原理">一条SQL解释MySQL的主从复制原理</h1>
+
+<p>借用一张图，来解释
+<a href="#R-image-5a7b9ddac5caa41b40f2a71c796950e5" class="lightbox-link"><img alt="mysql主从复制原理" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="/images/mysql_replica.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-5a7b9ddac5caa41b40f2a71c796950e5"><img alt="mysql主从复制原理" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="/images/mysql_replica.png"></a></p>
+<p>主备同步的详细过程和一致性保证机制如下：</p>
+<ol>
+<li>主库事务提交流程（两阶段提交）</li>
+</ol>
+<div class="highlight wrap-code"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- 第一阶段：准备阶段
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>XA <span style="color:#66d9ef">PREPARE</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> <span style="color:#960050;background-color:#1e0010">写入</span>redo log<span style="color:#960050;background-color:#1e0010">（</span>prepare状态<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> <span style="color:#960050;background-color:#1e0010">记录</span>prepare_lsn
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- 第二阶段：提交阶段
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>XA <span style="color:#66d9ef">COMMIT</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> <span style="color:#960050;background-color:#1e0010">写入</span>binlog
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> <span style="color:#960050;background-color:#1e0010">写入</span>redo log<span style="color:#960050;background-color:#1e0010">（</span>commit状态<span style="color:#960050;background-color:#1e0010">）</span></span></span></code></pre></div>
+<ol start="2">
+<li>详细执行步骤</li>
+</ol>
+<p>a) 主库端：</p>
+<ul>
+<li>事务执行过程中产生redo log（内存中）</li>
+<li>prepare阶段：将redo log写入磁盘（prepare状态）</li>
+<li>写入binlog到磁盘</li>
+<li>commit阶段：将redo log状态改为commit</li>
+<li>如果开启半同步复制，等待从库确认</li>
+<li>返回客户端提交成功</li>
+</ul>
+<p>b) 从库端：</p>
+<ul>
+<li>IO线程接收主库binlog</li>
+<li>写入relay log</li>
+<li>返回接收确认（半同步复制）</li>
+<li>SQL线程读取relay log</li>
+<li>重放SQL语句</li>
+<li>记录应用位点和GTID</li>
+</ul>
+<ol start="3">
+<li>一致性保证机制</li>
+</ol>
+<p>a) 两阶段提交保证：</p>
+<div class="highlight wrap-code"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- 主库配置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">set</span> <span style="color:#66d9ef">global</span> sync_binlog<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>;  <span style="color:#75715e">-- 确保binlog即时写入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">set</span> <span style="color:#66d9ef">global</span> innodb_flush_log_at_trx_commit<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>;  <span style="color:#75715e">-- 确保redo log即时写入</span></span></span></code></pre></div>
+<p>b) binlog与redo log关联：</p>
+<ul>
+<li>binlog_log_pos：记录binlog位置</li>
+<li>last_committed：记录提交序号</li>
+<li>sequence_number：记录序列号</li>
+</ul>
+<p>c) GTID保证：</p>
+<div class="highlight wrap-code"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- 查看GTID模式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">SHOW</span> VARIABLES <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;gtid_mode&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- 查看已执行的GTID集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">SHOW</span> MASTER STATUS;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SHOW</span> SLAVE STATUS<span style="color:#960050;background-color:#1e0010">\</span><span style="color:#66d9ef">G</span></span></span></code></pre></div>
+<ol start="4">
+<li>关键流程保证：</li>
+</ol>
+<p>a) 写入保证：</p>
+<ul>
+<li>redo log prepare必须先于binlog写入</li>
+<li>binlog写入成功后才能commit</li>
+<li>relay log写入成功后才能确认接收</li>
+</ul>
+<p>b) 崩溃恢复：</p>
+<ul>
+<li>如果崩溃点在prepare后、binlog写入前：回滚事务</li>
+<li>如果崩溃点在binlog写入后：提交事务</li>
+<li>依赖XID（事务ID）关联redo log和binlog</li>
+</ul>
+<ol start="5">
+<li>从库一致性保证：</li>
+</ol>
+<div class="highlight wrap-code"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- 从库配置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">set</span> <span style="color:#66d9ef">global</span> relay_log_recovery<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>;  <span style="color:#75715e">-- 确保崩溃恢复
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">set</span> <span style="color:#66d9ef">global</span> relay_log_info_repository<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;TABLE&#39;</span>;  <span style="color:#75715e">-- 使用表存储复制信息</span></span></span></code></pre></div>
+<ol start="6">
+<li>监控和验证：</li>
+</ol>
+<div class="highlight wrap-code"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- 查看主库事务状态
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">SHOW</span> ENGINE INNODB STATUS<span style="color:#960050;background-color:#1e0010">\</span><span style="color:#66d9ef">G</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- 查看复制状态
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">SHOW</span> SLAVE STATUS<span style="color:#960050;background-color:#1e0010">\</span><span style="color:#66d9ef">G</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- 查看复制延迟
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">SELECT</span> TIMESTAMPDIFF(<span style="color:#66d9ef">SECOND</span>, 
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">SELECT</span> UPDATE_TIME <span style="color:#66d9ef">FROM</span> information_schema.TABLES <span style="color:#66d9ef">WHERE</span> ...),
+</span></span><span style="display:flex;"><span>    NOW()) <span style="color:#66d9ef">as</span> replica_delay;</span></span></code></pre></div>
+<ol start="7">
+<li>最佳实践建议：</li>
+</ol>
+<p>a) 配置优化：</p>
+<ul>
+<li>启用semi-sync replication</li>
+<li>设置合适的超时参数</li>
+<li>配置足够的binlog保留时间</li>
+</ul>
+<p>b) 监控建议：</p>
+<ul>
+<li>监控复制延迟</li>
+<li>监控主从事务差异</li>
+<li>设置复制错误告警</li>
+</ul>
+<p>c) 定期维护：</p>
+<ul>
+<li>检查数据一致性</li>
+<li>进行主从切换演练</li>
+<li>清理过期binlog和relay log</li>
+</ul>
+<p>通过这些机制的配合，MySQL能够保证主从之间的事务一致性。关键在于：</p>
+<ol>
+<li>两阶段提交保证了redo log和binlog的一致</li>
+<li>GTID保证了复制的准确性和可追踪性</li>
+<li>半同步复制保证了数据的可靠传输</li>
+<li>crash-safe特性保证了异常情况下的数据一致性</li>
+</ol>
+<p>建议在实际应用中根据业务需求和性能要求，合理配置这些参数，并建立完善的监控机制。</p>
+
+  <footer class="footline">
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/index.html">
+只是为了好玩
+          </a>
+        </div>
+        <script>
+          window.index_js_url="/searchindex.en.js?1734282623";
+        </script>
+        <search><form action="/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1734282623" defer></script>
+        <script src="/js/lunr/lunr.min.js?1734282623" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1734282623" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1734282623" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1734282623" defer></script>
+        <script src="/js/search.js?1734282623" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-shortcutmenu-home" class="R-sidebarmenu">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/storagesystem/index.html"><a class="padding" href="/storagesystem/index.html">存储系统</a></li>
+            <li class="" data-nav-id="/os/index.html"><a class="padding" href="/os/index.html">操作系统</a></li>
+            <li class="parent " data-nav-id="/database/index.html"><a class="padding" href="/database/index.html">数据库</a><ul id="R-subsections-ffbd3c632901f0c6472eed450e4e91f8" class="collapsible-menu">
+            <li class="" data-nav-id="/database/mysqlabc02/index.html"><a class="padding" href="/database/mysqlabc02/index.html">Mysqlabc02</a></li>
+            <li class="active " data-nav-id="/database/mysqlabc01/index.html"><a class="padding" href="/database/mysqlabc01/index.html">一条SQL解释MySQL的主从复制原理</a></li></ul></li>
+          </ul>
+        </div>
+    
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/database/mysqlabc01/index.html" lang="zh" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.relearn.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.relearn.markVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+        <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1734282623" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1734282623" defer></script>
+    <script src="/js/theme.js?1734282623" defer></script>
+  </body>
+</html>

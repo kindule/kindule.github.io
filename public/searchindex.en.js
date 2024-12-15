@@ -1,19 +1,11 @@
 var relearn_searchindex = [
   {
-    "breadcrumb": "只是为了好玩 \u003e Posts",
-    "content": "Introduction This is bold text, and this is emphasized text.\nVisit the Hugo website!",
-    "description": "Introduction This is bold text, and this is emphasized text.\nVisit the Hugo website!",
-    "tags": [],
-    "title": "First",
-    "uri": "/posts/first/index.html"
-  },
-  {
-    "breadcrumb": "只是为了好玩",
+    "breadcrumb": "只是为了好玩 \u003e 数据库技术研究",
     "content": "",
     "description": "",
     "tags": [],
-    "title": "Posts",
-    "uri": "/posts/index.html"
+    "title": "MySQL之主从复制原理",
+    "uri": "/database/mysqlabc01/index.html"
   },
   {
     "breadcrumb": "",
@@ -22,6 +14,14 @@ var relearn_searchindex = [
     "tags": [],
     "title": "只是为了好玩",
     "uri": "/index.html"
+  },
+  {
+    "breadcrumb": "只是为了好玩",
+    "content": "",
+    "description": "数据库技术以及相关原理研究",
+    "tags": [],
+    "title": "数据库技术研究",
+    "uri": "/database/index.html"
   },
   {
     "breadcrumb": "只是为了好玩",
